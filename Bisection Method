@@ -1,0 +1,48 @@
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+
+using namespace std;
+
+double func(double x) {
+    return cos(x)-x*exp(x);
+}
+
+double bisection_method(double (*f)(double), double a, double b, double tol=1e-6, int max_iter=100) {
+    if (f(a) * f(b) >= 0) {
+        cout << "Bisection method fails." << endl;
+        return -1;
+    }
+
+    int iter_count = 0;
+    while (iter_count < max_iter) {
+        double c = (a + b) / 2;
+        double fc = f(c);
+        cout << setw(5) << iter_count + 1 << setw(15) << a << setw(15) << b << setw(15) << c << setw(15) << fc << setw(15) << abs(b - a) << endl;
+
+        if (abs(fc) < tol) {
+            return c;
+        }
+        if (fc * f(a) < 0) {
+            b = c;
+        } else {
+            a = c;
+        }
+        iter_count++;
+    }
+
+    cout << "Maximum iterations reached." << endl;
+    return (a + b) / 2;
+}
+
+int main() {
+    double tolerance = 1e-4;  // Set your desired tolerance
+    cout << setw(5) << "Iter" << setw(15) << "a" << setw(15) << "b" << setw(15) << "c" << setw(15) << "f(c)" << setw(15) << "|b - a|" << endl;
+    double root = bisection_method(func, 0.5, 0.6, tolerance);
+    if (root != -1) {
+        cout << "Root: " << root << endl;
+    } else {
+        cout << "Root not found within the specified tolerance." << endl;
+    }
+    return 0;
+}
